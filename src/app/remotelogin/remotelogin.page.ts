@@ -23,7 +23,7 @@ export class RemoteloginPage implements OnInit {
   private _window: ICustomWindow
   translations: any = {}
   unlockPwd: string;
-  scrypta: any = {}
+  bdcash: any = {}
   global: any = {}
   constructor(private router: Router, windowRef: WindowRefService, private socketone: SocketOne, private sockettwo: SocketTwo, private socketthree: SocketThree, private socketfour: SocketFour, private socketfive: SocketFive, private socketsix: SocketSix, private qrScanner: BarcodeScanner) {
     const app = this
@@ -66,7 +66,7 @@ export class RemoteloginPage implements OnInit {
   scanQRCode() {
     const app = this
     if(app.unlockPwd !== ''){
-      app._window.ScryptaCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (check) {
+      app._window.BdcashCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (check) {
         if(check !== false){
             app.qrScanner.scan().then(barcodeData => {
               app.isSending = true
@@ -74,13 +74,13 @@ export class RemoteloginPage implements OnInit {
               let qrRequest = barcodeData.text.split(':')
               var address = qrRequest[1]
               var protocol = qrRequest[0] + '://'
-              app._window.ScryptaCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (response) {
+              app._window.BdcashCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (response) {
                 let tosign = JSON.stringify({
                     protocol: protocol,
                     request: address,
                     sid: app.address + ':' + app.encrypted
                 })
-                message = await app._window.ScryptaCore.signMessage(response.prv, tosign)
+                message = await app._window.BdcashCore.signMessage(response.prv, tosign)
                 app.socketone.emit('message', message);
                 app.sockettwo.emit('message', message);
                 app.socketthree.emit('message', message);
@@ -89,7 +89,7 @@ export class RemoteloginPage implements OnInit {
                 app.socketsix.emit('message', message);
               })
               app.interval = setInterval(function(){
-                app._window.ScryptaCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (response) {
+                app._window.BdcashCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (response) {
                 app.socketone.emit('message', message);
                 app.sockettwo.emit('message', message);
                 app.socketthree.emit('message', message);

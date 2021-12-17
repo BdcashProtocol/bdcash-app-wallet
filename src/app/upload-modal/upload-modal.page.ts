@@ -86,7 +86,7 @@ export class UploadModalPage implements OnInit {
     const app = this
     if (app.unlockPwd !== undefined) {
       app.decrypted_wallet = 'Wallet Locked'
-      app._window.ScryptaCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(function (response) {
+      app._window.BDCashCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(function (response) {
         if (response !== false) {
           app.save();
         } else {

@@ -16,7 +16,7 @@
       <div *ngIf="toggleChecked === true">
         <h2 style='font-size:14px'>{{ translations.vault.encryption_password }}</h2>
           <ion-input type='text' style="border-bottom:1px solid #aaa" [(ngModel)]='encryptPwd'></ion-input>
-        <span style="color:#f00; font-size:12px">{{ translations.vault.encryption_reminder }}</span>
+        <span style="color:rgb(255, 174, 0); font-size:12px">{{ translations.vault.encryption_reminder }}</span>
       </div>
     </div>
   <h2 style='font-size:14px'>{{ translations.vault.title }}</h2>
@@ -31,7 +31,7 @@
   <h2 style='font-size:14px'>{{ translations.send.enter_wallet_password }}</h2>
     <ion-input type='password' style="border-bottom:1px solid #aaa" [(ngModel)]='unlockPwd'></ion-input>
   </div><br><br>
-  <span style="color:#f00; text-decoration:underline">
+  <span style="color:rgb(255, 174, 0); text-decoration:underline">
     {{ translations.vault.legal_disclaimer }}
   </span>
   <div class="ion-text-center">

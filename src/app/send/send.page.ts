@@ -32,7 +32,7 @@ export class SendPage implements OnInit {
   showQR: boolean = false
   public_address: string;
   chain: string = 'main';
-  idanode: string = 'https://idanodejs01.scryptachain.org'
+  nodesh: string = 'https://nodesh01.bdcashprotocol.com'
   encrypted_wallet: string;
   amountToSend: any = 0;
   addressToSend: string;
@@ -54,7 +54,7 @@ export class SendPage implements OnInit {
     const app = this
     app._window = windowRef.nativeWindow;
     setTimeout(async () => {
-      app.idanode = await app._window.ScryptaCore.connectNode()
+      app.nodesh = await app._window.BDCashCore.connectNode()
     },50)
     app.platform.ready().then(async () => {
       if(this.platform.is('ios') === true ){
@@ -93,7 +93,7 @@ export class SendPage implements OnInit {
     app.address = payload[0]
     app.encrypted = payload[1]
     app.getBalance()
-    app.price = await app.returnLyraPrice()
+    app.price = await app.returnBdcashPrice()
   }
 
   receiveCardiOS(){
@@ -161,18 +161,18 @@ export class SendPage implements OnInit {
     }
   }
 
-  returnLyraPrice(){
+  returnBdcashPrice(){
     const app = this
     return new Promise(response => {
     if (localStorage.getItem('currency') !== null) {
       app.currency = localStorage.getItem('currency')
     }
   
-    let url = 'https://api.coingecko.com/api/v3/simple/price?ids=scrypta&vs_currencies=' + app.currency
+    let url = 'https://api.coingecko.com/api/v3/simple/price?ids=bdcash&vs_currencies=' + app.currency
 
     axios.get(url)
       .then(function (result) {
-        let price:number = result.data.scrypta[app.currency]
+        let price:number = result.data.bdcash[app.currency]
         response(price)
       })
     })
@@ -182,11 +182,11 @@ export class SendPage implements OnInit {
     const app = this
 
     if(app.chain !== 'main'){
-      let sidechainBalance = await axios.post(app.idanode + '/sidechain/balance', { dapp_address: app.address, sidechain_address: app.chain })
+      let sidechainBalance = await axios.post(app.nodesh + '/sidechain/balance', { dapp_address: app.address, sidechain_address: app.chain })
       app.ticker = sidechainBalance.data.symbol
       app.balance = sidechainBalance.data.balance
     }else{
-      axios.get(app.idanode + '/balance/' + app.address)
+      axios.get(app.nodesh + '/balance/' + app.address)
         .then(function (response) {
           app.balance = response.data['balance']
         })
@@ -196,7 +196,7 @@ export class SendPage implements OnInit {
   fixInputs(what){
     const app = this
     app.focus = what
-    if(what === 'lyra'){
+    if(what === 'bdcash'){
       if(app.amountToSend === 0){
         app.amountToSend = ''
       }
@@ -219,8 +219,8 @@ export class SendPage implements OnInit {
 
   async calculateFIAT() {
     const app = this
-    if(app.focus === 'lyra'){
-      app.price = await this.returnLyraPrice()
+    if(app.focus === 'bdcash'){
+      app.price = await this.returnBdcashPrice()
       if(app.amountToSend !== '' && app.amountToSend !== 0 && app.amountToSend !== null){
         let amount = app.amountToSend.toFixed(8)
         amount = amount.replace(',','.')
@@ -235,11 +235,11 @@ export class SendPage implements OnInit {
     }
   }
 
-  async calculateLyra() {
+  async calculateBdcash() {
     const app = this
     if(app.focus === 'fiat'){
       if(app.amountFIAT !== null){
-        app.price = await this.returnLyraPrice()
+        app.price = await this.returnBdcashPrice()
         let calculate = parseFloat(app.amountFIAT) / parseFloat(app.price)
         if(calculate.toString() !== "NaN"){
           app.amountToSend = calculate.toFixed(4)
@@ -259,14 +259,14 @@ export class SendPage implements OnInit {
       app.amountToSend = parseFloat(app.amountToSend.replace(',','.'))
       if(app.amountToSend < app.balance){
         app.decrypted_wallet = 'Wallet Locked'
-        app._window.ScryptaCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (response) {
+        app._window.BDCashCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (response) {
           if (response !== false) {
             app.private_key = response.key
             app.api_secret = response.api_secret
             if(app.chain === 'main'){
-              app.sendLyra();
+              app.sendBdcash();
             }else{
-              let responseSend = await axios.post(app.idanode + '/sidechain/send', 
+              let responseSend = await axios.post(app.nodesh + '/sidechain/send', 
                 { 
                   from: app.address, 
                   private_key: response.prv,
@@ -298,12 +298,12 @@ export class SendPage implements OnInit {
     }
   }
 
-  async sendLyra() {
+  async sendBdcash() {
     const app = this
     if(app.isSending === false){
       app.isSending = true
       app.amountToSend = parseFloat(String(app.amountToSend).replace(',','.'))
-      await this._window.ScryptaCore.send(app.unlockPwd, app.addressToSend, app.amountToSend, '', app.address + ':' + app.encrypted).then((result) => {
+      await this._window.BDCashCore.send(app.unlockPwd, app.addressToSend, app.amountToSend, '', app.address + ':' + app.encrypted).then((result) => {
         console.log(result)
         if(result !== false && result !== undefined && result !== null){
           app.amountFIAT = 0
@@ -324,7 +324,7 @@ export class SendPage implements OnInit {
   scanQRCode() {
     const app = this
     this.qrScanner.scan().then(barcodeData => {
-      barcodeData.text = barcodeData.text.replace('lyra:','').replace('scrypta:','')
+      barcodeData.text = barcodeData.text.replace('bdcash:','').replace('bdcash:','')
       let check = barcodeData.text.split('?')
       if(check[1] !== undefined){
         var amount = check[1].replace('amount=','')
@@ -333,7 +333,7 @@ export class SendPage implements OnInit {
       }else{
         this.addressToSend = barcodeData.text
       }
-      app.focus = 'lyra'
+      app.focus = 'bdcash'
       app.calculateFIAT()
       document.getElementById('password').style.display = 'block';
       document.getElementById('buttonSend').style.display = 'block';

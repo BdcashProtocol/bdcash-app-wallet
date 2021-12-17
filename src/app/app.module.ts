@@ -33,44 +33,10 @@ import { SocketIoModule } from 'ngx-socket-io';
 @Injectable()
 export class SocketOne extends Socket { 
     constructor() {
-        super({ url: 'http://idanodejs01.scryptachain.org:42226', options: {} });
+        super({ url: 'http://nodesh01.bdcashprotocol.com:3001', options: {} });
     }
 }
  
-@Injectable()
-export class SocketTwo extends Socket {
-    constructor() {
-        super({ url: 'http://idanodejs02.scryptachain.org:42226', options: {} });
-    }
-}
-
-@Injectable()
-export class SocketThree extends Socket {
-    constructor() {
-        super({ url: 'http://idanodejs03.scryptachain.org:42226', options: {} });
-    }
-}
-
-@Injectable()
-export class SocketFour extends Socket {
-    constructor() {
-        super({ url: 'http://idanodejs04.scryptachain.org:42226', options: {} });
-    }
-}
-
-@Injectable()
-export class SocketFive extends Socket {
-    constructor() {
-        super({ url: 'http://idanodejs05.scryptachain.org:42226', options: {} });
-    }
-}
-
-@Injectable()
-export class SocketSix extends Socket {
-    constructor() {
-        super({ url: 'http://idanodejs06.scryptachain.org:42226', options: {} });
-    }
-}
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

@@ -28,8 +28,8 @@ export class TokenPage implements OnInit {
   toggleNoBalance: boolean = true
   encrypted: string = ''
   selected: number = 0
-  lyraBalance: any = 0
-  idanode: string = 'https://idanodejs01.scryptachain.org'
+  bdcashBalance: any = 0
+  nodesh: string = 'https://nodesh01.bdcashprotocol.com'
   address: string
   transactions = []
   constructor(private clipboard: Clipboard, private toast: ToastController, private modalCtrl: ModalController, windowRef: WindowRefService, public router:Router, private _location: Location, private iab: InAppBrowser) {
@@ -50,7 +50,7 @@ export class TokenPage implements OnInit {
     }
     app.translations = this.locales.default[app.language]
     setTimeout(async () => {
-      app.idanode = await app._window.ScryptaCore.connectNode()
+      app.nodesh = await app._window.BDCashCore.connectNode()
     },50)
   }
   
@@ -65,13 +65,13 @@ export class TokenPage implements OnInit {
       app.wallet = JSON.parse(localStorage.getItem('wallet'))
       let payload = app.wallet[app.selected].split(':')
       app.address = payload[0]
-      let balance = await axios.get(app.idanode + '/balance/' + payload[0])
+      let balance = await axios.get(app.nodesh + '/balance/' + payload[0])
 
-      let sidechains = await axios.get(app.idanode + '/sidechain/list')
+      let sidechains = await axios.get(app.nodesh + '/sidechain/list')
 
       for(let x in sidechains.data.data){
         let sidechain = sidechains.data.data[x]
-        let sidechainBalance = await axios.post(app.idanode + '/sidechain/balance', { dapp_address: payload[0], sidechain_address: sidechain.address })
+        let sidechainBalance = await axios.post(app.nodesh + '/sidechain/balance', { dapp_address: payload[0], sidechain_address: sidechain.address })
         app.accounts.push({
           address: sidechain.address,
           ticker: sidechain.genesis.symbol,
@@ -79,7 +79,7 @@ export class TokenPage implements OnInit {
           balance: sidechainBalance.data.balance
         })
       }
-      app.lyraBalance = balance.data.balance.toFixed(4)
+      app.bdcashBalance = balance.data.balance.toFixed(4)
       app.isParsing = false
     }
   }
