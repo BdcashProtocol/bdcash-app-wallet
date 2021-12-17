@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ translations.ui.vault }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon name="add" (click)='openModalUpload()' style="padding-right:10px;"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" style="text-align: center">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="isUploading === true" style="font-size:28px">
+    <ion-icon name="cloud-upload" style="margin:10vh 0 20px 0; font-size:100px;"></ion-icon><br>
+    {{workingmessage}}
+  </div>
+  <div *ngIf="isUploading === false">
+    <div *ngIf="readreturn.length == 0">
+        <ion-icon name="folder" style="font-size:80px; margin:20px 0" class="bottom-menu-active"></ion-icon>
+        <ion-card>
+          <div style="padding:10px">
+            {{ translations.vault.line_1 }}<br><br>
+            {{ translations.vault.line_2 }}<br><br>
+            {{ translations.vault.line_3 }}
+          </div>
+        </ion-card>
+        <button class='buttonsBut' (click)='openModalUpload()' style='margin:0 auto;margin-top:5%'>{{ translations.vault.upload_file }}</button>
+      </div>
+      <div *ngIf="readreturn.length != 0">
+        <div *ngFor="let file of readreturn; let i=index" (click)="generic(file)" [attr.data-index]="i">
+          <ion-card *ngIf="file.protocol !== 'chain://' && file.protocol !== 'I://'">
+            <div style="padding:10px">
+                <p *ngIf="file.refID !== 'undefined' && file.refID !== undefined && file.refID !== ''">{{file.refID}}</p>
+                <p *ngIf="file.text">{{file.text}}</p>
+                <p *ngIf="file.data && !file.is_file">{{file.data}}</p>
+                <div *ngIf="file.is_file">
+                  <img *ngIf="file.mimetype === 'image'" src="{{file.data}}" width="100%">
+                  <span *ngIf="file.mimetype !== 'image' && file.mimetype !== undefined">{{ translations.vault.filetype }} {{ file.mimedetail }}</span>
+                  <span *ngIf="file.protocol === 'E://'">{{ translations.vault.encrypted }}</span>
+                </div>
+                <p style="font-size:10px;color:#a7a7a7"><strong>{{ translations.vault.block }}</strong> {{file.block}}</p>
+                <p style="font-size:10px;color:#a7a7a7">{{file.datetime}}</p>
+            </div>
+          </ion-card>
+        </div>
+      </div>
+  </div>
+
+</ion-content>
+<ion-footer>
+
+
+  <ion-tab-bar slot="bottom" style="display:flex!important">
+
+    <ion-tab-button [routerLink]="'/dashboard'">
+      <ion-label style='color:#a7a7a7'>Dashboard</ion-label>
+      <ion-icon name="apps" style='color:#a7a7a7'></ion-icon>
+
+    </ion-tab-button>
+
+    <ion-tab-button [routerLink]="'/send'">
+      <ion-label style='color:#a7a7a7'>{{ translations.ui.send }}</ion-label>
+      <ion-icon name="send" style='color:#a7a7a7'></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button [routerLink]="'/receive'">
+      <ion-label style='color:#a7a7a7'>{{ translations.ui.receive }}</ion-label>
+      <ion-icon name="add" style='color:#a7a7a7'></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button [routerLink]="'/archive'">
+      <ion-label class="bottom-menu-active">{{ translations.ui.vault }}</ion-label>
+      <ion-icon name="folder" class="bottom-menu-active"></ion-icon>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+</ion-footer>

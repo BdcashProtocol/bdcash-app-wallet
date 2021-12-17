@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-icon style="margin: 0 10px" (click)="goBack()" name="arrow-back"></ion-icon>
+      <ion-title>{{ translations.ui.remotelogin }}</ion-title>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="!isSending">
+  <div style="text-align:center">
+    <br><br><ion-icon style="font-size:150px" name="qr-code-outline"></ion-icon><br><br>
+    {{ translations.remotelogin.scan }}
+  </div>
+  <div id='password'>
+    <h4 style='font-size:12px;color:#d8273a' class="ion-padding">{{ translations.send.enter_wallet_password }}</h4>
+    <ion-item>
+      <ion-input type="password" [(ngModel)]='unlockPwd' style="opacity: 0.5"
+        placeholder="{{ translations.send.enter_wallet_password }}" required></ion-input>
+    </ion-item>
+  </div>
+  <br>
+  <button class='buttonsBut' id='buttonSend' (click)="scanQRCode()" style="width:100%">{{ translations.remotelogin.start }}</button>
+</ion-content>
+
+<ion-content class="ion-padding" *ngIf="isSending">
+  <div style="padding: 5vh 15% 0 15%; text-align:center">
+    <br><br><ion-icon style="font-size:150px" name="qr-code-outline"></ion-icon><br><br>
+    {{ translations.remotelogin.wait }}
+  </div>
+</ion-content>

@@ -1,0 +1,56 @@
+<ion-header *ngIf="add !== null">
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-icon style="margin: 0 10px" (click)="goBack()" name="arrow-back"></ion-icon>
+      <ion-title>{{ translations.home.create_wallet }}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <div id="splash" style="position:fixed; 
+        top:0; 
+        left:0; 
+        background-color:#fff; 
+        z-index:999999; 
+        background-image: url(/assets/imgs/logo.png); 
+        background-position:center; 
+        background-repeat:no-repeat;
+        background-size:25%;
+        width:100%; 
+        height: 100%;">
+  </div>
+  <div *ngIf="add === null">
+    <img src="/assets/imgs/logo.png" class="scrypta_ce" style='margin-top: 10%; width: 80px'><br><br>
+    {{ translations.home.welcome_manent }}<br>
+    {{ translations.home.official_wallet }}<br><br>
+    {{ translations.home.choose_password }}
+  </div>
+  <div *ngIf="add !== null" class="ion-padding"><br><br>
+    {{ translations.home.choose_password }}
+  </div>
+  <form (ngSubmit)=createWallet()>
+    <ion-item>
+      <ion-label position="floating">
+        Password
+      </ion-label>
+      <ion-input type="password" [(ngModel)]='password' name='password'></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
+        {{ translations.home.repeat_password }}
+      </ion-label>
+      <ion-input type="password" [(ngModel)]='repassword' name='repassword' class="inputForms"></ion-input>
+    </ion-item>
+    <button *ngIf="isCreating === false" type="submit" expand="full" class='buttonsBut' style="margin-top:5%;">{{ translations.home.create_button }}</button>
+    <div style="width:100%; text-align:center; margin-top:15px" *ngIf="isCreating === true">
+      {{ translations.home.creating }}
+    </div>
+  </form><br>
+  <div *ngIf="add === null" >
+    <a style="color:#d8273a" routerLink='/login-to-wallet'>{{ translations.home.import_wallet }}</a>
+  </div>
+  <div *ngIf="add !== null" >
+    <a style="color:#d8273a" routerLink='/login-to-wallet/add'>{{ translations.home.back }}</a>
+  </div>
+</ion-content>

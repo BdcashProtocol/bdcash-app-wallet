@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ translations.identities.identity }}</ion-title>
+    <div slot='end'>
+      <ion-icon name='close' style="margin-right:10px;" (click)='close()'></ion-icon>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding ion-text-center">
+  <strong>{{ translations.identities.balance }}</strong> {{ balance }} LYRA<br><br>
+  <qrcode [qrdata]="myAngularxQrCode" [size]="256" style="display:inline-block" [level]="'M'"></qrcode><br>
+  <span style="font-size:11px">{{ address }}</span> <span style="font-size:25px; margin-left:5px"><ion-icon (click)="copyAddress()" name="copy"></ion-icon></span><br>
+  <button class='buttonsBut' (click)="useAddress()" style='margin:10px auto; width:100%; opacity: 1'>{{ translations.identities.use_address }}</button><br>
+  <button class='buttonsBut' (click)="openInExplorer()" style='margin:0 auto; width:100%; opacity: 1'>{{ translations.identities.open_explorer }}</button><br>
+  <button class='buttonsBut' (click)="openChangePassword()" style='margin:10px auto 0 auto; width:100%; opacity: 1'>{{ translations.identities.change_password }}</button><br>
+  <button class='buttonsBut' (click)="confirmDelete()" style='margin:10px auto 0 auto; width:100%; opacity: 1'>{{ translations.identities.delete_address }}</button>
+  
+  <div *ngIf="showChange === true" class="unlockModal ion-padding">
+      <ion-icon name='close' style="position:absolute; top:10px; right:10px; font-size:25px" (click)='hideChangePassword()'></ion-icon>
+      <h4 style="margin-top:20vh">{{ translations.send.enter_wallet_password }}</h4>
+      <ion-item class="ion-text-center">
+        <ion-input [(ngModel)]='password' type='password'></ion-input>
+      </ion-item>
+      <h4 style="margin-top:10px">{{ translations.home.enter_new_password }}</h4>
+      <ion-item class="ion-text-center">
+        <ion-input [(ngModel)]='passwordChange' type='password'></ion-input>
+      </ion-item>
+      <h4 style="margin-top:10px">{{ translations.home.repeat_password }}</h4>
+      <ion-item class="ion-text-center">
+        <ion-input [(ngModel)]='passwordChangeRepeat' type='password'></ion-input>
+      </ion-item>
+      <div class="ion-text-center">
+        <button (click)='changePassword()' class='buttonsBut ion-text-center' style='margin:10% auto 0 auto;'>{{ translations.identities.change_password }}</button>
+      </div>
+    </div>
+
+  <div *ngIf="private_key === ''">
+      <div *ngIf="showUnlock === true" class="unlockModal ion-padding">
+          <ion-icon name='close' style="position:absolute; top:10px; right:10px; font-size:25px" (click)='lock()'></ion-icon>
+          <h2 style="margin-top:30vh">{{ translations.send.enter_wallet_password }}</h2>
+          <ion-item text-center>
+            <ion-input [(ngModel)]='password' type='password'></ion-input>
+          </ion-item>
+          <div text-center>
+            <button (click)='unlockWallet()' class='buttonsBut ion-text-center' style='margin:10% auto 0 auto;'>{{ translations.general.unlock_wallet }}</button>
+          </div>
+        </div><br>
+        <span *ngIf="showUnlock === false" style="color:#d8273a; text-decoration: underline" (click)="unlock()">{{ translations.identities.show_privkey }}</span><br>
+  </div>
+
+  <div *ngIf="private_key !== ''">
+    <h2>{{ translations.identities.your_privkey }}</h2>
+    <span style="font-size:11px">{{ private_key }}</span>
+    <button class='buttonsBut' (click)="copyPrivKey()" style='margin:0 auto; width:100%; opacity: 1'>{{ translations.identities.copy_privkey }}</button><br>
+  </div>
+
+  <h2>{{ translations.home.latest_transactions }}</h2>
+  <ion-list>
+    <div *ngIf="transactions.length==0">{{ translations.home.no_transactions }}</div>
+    <div *ngIf="transactions.length!=0">
+      <ion-item *ngFor="let transaction of transactions; let i=index" [attr.data-index]="i"
+        (click)='openDetails(transaction)'>
+        <span *ngIf="transaction.value > 0">+</span>{{ transaction.value.toFixed(4) }}
+        <span *ngIf="transaction.value > 0" style="margin-left:5px; font-size: 11px">
+          {{ translations.general.from }} {{ transaction.from[0] }}
+        </span> 
+        <span *ngIf="transaction.value < 0" style="margin-left:5px; font-size: 11px">
+          {{ translations.general.to }} <span *ngIf="transaction.to[1] === undefined">{{ transaction.to[0] }}</span>{{ transaction.to[1] }}
+        </span>
+      </ion-item>
+    </div>
+  </ion-list>
+</ion-content>

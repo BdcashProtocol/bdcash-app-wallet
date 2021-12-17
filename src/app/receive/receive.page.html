@@ -1,0 +1,104 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons>
+            <ion-menu-button></ion-menu-button>
+            <ion-title>{{ translations.ui.receive }}</ion-title>
+            </ion-buttons>
+            <ion-buttons slot="end">
+              <div (click)='openModalQR()' style="padding-right:10px;">QR</div>
+            </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content >
+  <div *ngIf="showQR" style="width: 100%; text-align: center; margin:30px 0 15px 0;">
+      <qrcode [qrdata]="myAngularxQrCode" [size]="256" style="display:inline-block; border:10px solid #fff" [level]="'M'"></qrcode><br>
+      <span style="font-size:11px">{{address}}</span> <span style="font-size:25px; margin-left:5px"><ion-icon (click)="copyAddress()" name="copy"></ion-icon></span>
+  </div>
+  <ion-item *ngIf="chain !== 'main'">
+    <ion-input type="text" readonly [(ngModel)]='amountSidechain' (ionFocus)="fixInputs('sidechain')" value=0 style='font-size: 36px; line-height:36px; font-weight:bold;'></ion-input>
+    <p style='font-size: 36px; line-height:36px; font-weight:bold;' slot='end'>{{ ticker }}</p>
+  </ion-item>
+<ion-item *ngIf="chain === 'main'">
+  <ion-input type="text" readonly [(ngModel)]='amountLyra' (ionFocus)="fixInputs('lyra')" (ngModelChange)='calculateFIAT()' value=0 style='font-size: 36px; line-height:36px; font-weight:bold;'></ion-input>
+  <p style='font-size: 36px; line-height:36px; font-weight:bold;' slot='end'>LYRA</p>
+</ion-item>
+<ion-item *ngIf="chain === 'main'">
+  <ion-input type="text" readonly [(ngModel)]='amountFIAT' (ionFocus)="fixInputs('fiat')" (ngModelChange)='calculateLyra()' value=0 style='font-size: 18px; font-weight:bold;'></ion-input>
+  <p style='font-size: 18px; font-weight:bold;' slot='end'>{{ currency.toUpperCase() }}</p>
+</ion-item>
+<div style="text-align: center;" *ngIf="!showQR">
+  <div (click)='addNumber(1)' class="pos-btn">1</div>
+  <div (click)='addNumber(2)' class="pos-btn">2</div>
+  <div (click)='addNumber(3)' class="pos-btn">3</div>
+  <div (click)='addNumber(4)' class="pos-btn">4</div>
+  <div (click)='addNumber(5)' class="pos-btn">5</div>
+  <div (click)='addNumber(6)' class="pos-btn">6</div>
+  <div (click)='addNumber(7)' class="pos-btn">7</div>
+  <div (click)='addNumber(8)' class="pos-btn">8</div>
+  <div (click)='addNumber(9)' class="pos-btn">9</div>
+  <div (click)='addDot()' class="pos-btn">.</div>
+  <div (click)='addNumber(0)' class="pos-btn">0</div>
+  <div (click)='removeNumber()' class="pos-btn">C</div>
+</div>
+<div *ngIf = "isIOS === false && !showQR" style="text-align:center">
+  <button (click)='receiveCardAndroid()' expand="full" class='buttonsBut' style='margin-top: 5%;'>{{ translations.general.receive_card }}<ion-icon name="arrow-forward" style="float:right" size='large'></ion-icon></button><br/>
+</div>
+<div *ngIf = "isIOS === true && !showQR" style="text-align:center">
+  <button (click)='receiveCardiOS()' style="text-align:center" expand="full" class='buttonsBut' style='margin-top: 5%'>{{ translations.general.receive_card }}<ion-icon name="arrow-forward" style="float:right" size='large'></ion-icon></button><br/>
+</div>
+<ion-content *ngIf="showUnlock === true" class="unlockModal ion-padding">
+  <ion-icon name='close' style="position:absolute; top:10px; right:10px; font-size:25px" (click)='lock()'></ion-icon>
+  <h1>{{ translations.home.balance }}: {{ guestBalance }} {{ ticker }}</h1>
+  <h2 style="margin-top:30vh">{{ translations.home.enter_wallet_password }}</h2>
+  <ion-item class="ion-text-center">
+    <ion-input [(ngModel)]='password' type='password'></ion-input>
+  </ion-item>
+  <div class="ion-text-center" *ngIf="isSending === false">
+    <button (click)='unlockWallet()' class='buttonsBut ion-text-center' style='margin:10% auto 0 auto;'>{{ translations.general.pay_now }}</button>
+  </div>
+  <div class="ion-text-center" *ngIf="isSending === true" style="margin-top:20px">
+    {{ translations.general.process_payment }}
+  </div>
+</ion-content>
+</ion-content>
+<div *ngIf="showNFC" style="position:fixed; 
+      top:0; 
+      left:0; 
+      background-color:#fff; 
+      z-index:999999; 
+      background-size:25%;
+      width:100%; 
+      height: 100%;
+      text-align: center;
+      font-size:28px;
+      font-weight:bold;
+      padding: 10vh 20px" class="showNFCWrapper">
+    <ion-icon name='close' style="position:absolute; top:10px; right:10px; z-index: 99;" (click)='closeNFC()'></ion-icon>
+    <ion-icon name="card" style="font-size:140px;margin-top:30%;"></ion-icon><br>
+    {{ translations.identities.close_card }}
+</div>
+<ion-footer>
+    <ion-tab-bar slot="bottom" style="display:flex!important">
+      <ion-tab-button  [routerLink]="'/dashboard'">
+        <ion-label style='color:#a7a7a7'>Dashboard</ion-label>
+        <ion-icon name="apps" style='color:#a7a7a7'></ion-icon>
+      </ion-tab-button>
+  
+      <ion-tab-button [routerLink]="'/send'">
+        <ion-label style='color:#a7a7a7'>{{ translations.ui.send }}</ion-label>
+        <ion-icon name="send" style='color:#a7a7a7'></ion-icon>
+      </ion-tab-button>
+
+      <ion-tab-button [routerLink]="'/receive'" >
+          <ion-label class="bottom-menu-active">{{ translations.ui.receive }}</ion-label>
+          <ion-icon name="add" class="bottom-menu-active"></ion-icon>
+        </ion-tab-button>
+
+        <ion-tab-button [routerLink]="'/archive'" *ngIf="chain === 'main'">
+          <ion-label style='color:#a7a7a7'>{{ translations.ui.vault }}</ion-label>
+          <ion-icon name="folder" style='color:#a7a7a7'></ion-icon>
+        </ion-tab-button>
+  
+    </ion-tab-bar>
+  
+  </ion-footer>

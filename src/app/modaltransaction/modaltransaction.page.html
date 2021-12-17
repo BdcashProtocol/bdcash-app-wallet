@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Transaction Details</ion-title>
+    <div slot='end'>
+        <ion-icon name='close' (click)='close()'></ion-icon>
+      </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <h2 style="font-size:16px;color:#d43f51">Type</h2>
+    <ion-item>
+      <div *ngIf="risposta.amount.charAt(0)==='-'">
+      <p style='font-size:14px'>Sent</p>
+    
+    </div>
+    <div *ngIf="risposta.amount.charAt(0)!=='-'">
+        <p style='font-size:14px'>Received </p>
+       
+      </div>
+    </ion-item>
+    <h2 style="font-size:16px;color:#d43f51">amount</h2>
+    <ion-item>
+      <p style='font-size:14px'>{{risposta.amount}}</p>
+    </ion-item>
+    <h2 style="font-size:16px;color:#d43f51">Time</h2>
+    <ion-item>
+      <p style='font-size:14px'>{{risposta.date}}</p>
+    </ion-item>
+    <h2 style="font-size:16px;color:#d43f51">Status</h2>
+    <ion-item>
+      <p style='font-size:14px'>{{risposta.confirmations}} Confirmations</p>
+    </ion-item>
+    <h2 style="font-size:16px;color:#d43f51">Tx Id</h2>
+    <ion-item>
+      <p style='font-size:14px'>{{risposta.txid}}</p>
+    </ion-item>
+
+
+
+</ion-content>

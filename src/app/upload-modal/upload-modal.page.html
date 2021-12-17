@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Upload</ion-title>
+    <div slot='end'>
+      <ion-icon name='close' style="margin-right:13px" (click)='close()'></ion-icon>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div style="width:100%">
+      <h2 style='font-size:14px'>{{ translations.vault.encrypt_data }}</h2>
+      <div style="float:right; margin-top:-30px;">
+        <ion-toggle [(ngModel)]='toggleChecked'></ion-toggle>
+      </div>
+      <div *ngIf="toggleChecked === true">
+        <h2 style='font-size:14px'>{{ translations.vault.encryption_password }}</h2>
+          <ion-input type='text' style="border-bottom:1px solid #aaa" [(ngModel)]='encryptPwd'></ion-input>
+        <span style="color:#f00; font-size:12px">{{ translations.vault.encryption_reminder }}</span>
+      </div>
+    </div>
+  <h2 style='font-size:14px'>{{ translations.vault.title }}</h2>
+    <ion-input style="border-bottom:1px solid #aaa" [(ngModel)]='refID'></ion-input>
+  <div style="display: none;">
+    <h2 style='font-size:14px'>{{ translations.vault.select_file }}</h2>
+    <input placeholder="{{ translations.vault.select_file }}" type='file' style="margin:0; width: 100%" [(ngModel)]='fileName' id='fileInput' (change)='getAttributes()'>
+  </div>
+    <h2 style='font-size:14px'>{{ translations.vault.text }}</h2>
+    <ion-textarea placeholder="{{ translations.vault.insert_text }}" style="border-bottom:1px solid #aaa; height:20vh" [(ngModel)]='message'></ion-textarea>
+  <div id='passwordFields'>
+  <h2 style='font-size:14px'>{{ translations.send.enter_wallet_password }}</h2>
+    <ion-input type='password' style="border-bottom:1px solid #aaa" [(ngModel)]='unlockPwd'></ion-input>
+  </div><br><br>
+  <span style="color:#f00; text-decoration:underline">
+    {{ translations.vault.legal_disclaimer }}
+  </span>
+  <div class="ion-text-center">
+    <button class="buttonsBut ion-text-center" type="submit" (click)='unlockWallet()' style="margin:20px auto">{{ translations.vault.upload_now }}</button>
+  </div>
+
+</ion-content>

@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-menu-button></ion-menu-button>
+      <ion-title>Dashboard</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div style="display:none" [class.show]="chain === 'main'">
+    <h3 style="text-align:left; margin:0px; width: 100%; font-weight:bold; font-size:36px">{{balance}} LYRA</h3>
+    <h4 style="font-size:24px; color:#d8273a; margin-top:-5px;">{{ value }} {{ currency.toUpperCase() }} <span style="font-size:14px; color:#333">{{ valueBTC }} BTC</span></h4>
+    <div style="width:110%">
+      <canvas #lineCanvas style="position: relative; height:40vh; max-height: 200px; margin-left: -16px"></canvas><br>
+    </div>
+    <div *ngIf="chain === 'main'">
+
+      <div class="ion-text-center" style="font-size:12px; margin-top:-10px">{{pricelabel}}</div>
+      <div *ngIf="unconfirmed.length > 0">
+        <h2>{{ translations.home.unconfirmed }}</h2>
+        <ion-list>
+          <ion-item *ngFor="let transaction of unconfirmed; let i=index" [attr.data-index]="i">
+            <span *ngIf="transaction.value > 0">+</span>{{ transaction.value.toFixed(4) }} <span style="font-size:8px; margin-left:5px;">LYRA</span>
+            <span style="margin-left:5px; font-size: 11px" *ngIf="transaction.value < 0">
+              {{ translations.general.to }} {{ transaction.to[1] }}
+            </span>
+            <span style="margin-left:5px; font-size: 11px" *ngIf="transaction.value > 0">
+              {{ translations.general.from }} {{ transaction.address }}
+            </span>
+          </ion-item>
+        </ion-list>
+      </div>
+      <h2>{{ translations.home.latest_transactions }}</h2>
+      <ion-list>
+        <div *ngIf="transactions.length==0">{{ translations.home.no_transactions }}</div>
+        <div *ngIf="transactions.length!=0">
+          <ion-item *ngFor="let transaction of transactions | slice:0:5; let i=index" [attr.data-index]="i"
+            (click)='openDetails(transaction)'>
+            <span *ngIf="transaction.value > 0">+</span>{{ transaction.value.toFixed(4) }} <span style="font-size:8px; margin-left:5px;">LYRA</span>
+            <span *ngIf="transaction.value > 0" style="margin-left:5px; font-size: 11px">
+              {{ translations.general.from }} {{ transaction.from[0] }}
+            </span> 
+            <span *ngIf="transaction.value < 0" style="margin-left:5px; font-size: 11px">
+              {{ translations.general.to }} <span *ngIf="transaction.to[1] === undefined">{{ transaction.to[0] }}</span>{{ transaction.to[1] }}
+            </span>
+          </ion-item>
+        </div>
+      </ion-list>
+    </div>
+  </div>
+  <div *ngIf="chain !== 'main'">
+    <h3 style="text-align:left; margin:0px; width: 100%; font-weight:bold; font-size:36px">{{balance}} {{ ticker }}</h3>
+    <h2>{{ translations.home.latest_transactions }}</h2>
+    <ion-list>
+      <div *ngIf="transactions.length==0">{{ translations.home.no_transactions }}</div>
+      <div *ngIf="transactions.length!=0">
+        <div *ngFor="let transaction of transactions | slice:0:10; let i=index" [attr.data-index]="i" style="padding:10px">
+          <span *ngIf="transaction.amount > 0">+</span>{{ transaction.amount }}<span style="font-size:8px; margin-left:5px;">{{ ticker }}</span>
+          <span *ngIf="transaction.amount > 0" style="margin-left:5px; font-size: 11px">
+            {{ translations.general.from }} {{ transaction.from }}
+          </span> 
+          <span *ngIf="transaction.amount < 0" style="margin-left:5px; font-size: 11px">
+            {{ translations.general.to }} {{ transaction.to }}
+          </span>
+          <div style="width:100%; display:block; font-size:10px;">{{ transaction.memo }}</div>
+        </div>
+      </div>
+    </ion-list>
+  </div>
+</ion-content>
+<ion-footer  class="ion-no-border">
+
+  <ion-tab-bar slot="bottom" style="display:flex!important">
+
+    <ion-tab-button [routerLink]="'/dashboard'">
+      <ion-label class="bottom-menu-active">Dashboard</ion-label>
+      <ion-icon name="apps" class="bottom-menu-active"></ion-icon>
+
+    </ion-tab-button>
+
+    <ion-tab-button [routerLink]="'/send'">
+      <ion-label style='color:#a7a7a7'>{{ translations.ui.send }}</ion-label>
+      <ion-icon name="send" style='color:#a7a7a7'></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button [routerLink]="'/receive'">
+      <ion-label style='color:#a7a7a7'>{{ translations.ui.receive }}</ion-label>
+      <ion-icon name="add" style='color:#a7a7a7'></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button [routerLink]="'/archive'" *ngIf="chain === 'main'">
+      <ion-label style='color:#a7a7a7'>{{ translations.ui.vault }}</ion-label>
+      <ion-icon name="folder" style='color:#a7a7a7'></ion-icon>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+</ion-footer>

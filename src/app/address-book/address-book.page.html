@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon style="margin: 0 10px" (click)="goBack()" name="arrow-back"></ion-icon>
+    </ion-buttons>
+    <ion-title>{{ translations.contacts.manage }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon name="add" (click)='addContact()' style="padding-right:10px;"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="ion-padding" style="text-align: center" *ngIf="contacts.length === 0">
+    {{ translations.contacts.no_contacts }}
+  </div>
+  <div *ngIf="contacts.length > 0">
+    <ion-input placeholder='Search contacts' (keyup) = "filterContacts()" style="border-bottom:1px solid #aaa; font-size:11px" [(ngModel)]='searchContact'></ion-input>
+    <div *ngFor="let address of filtered; let i=index" [attr.data-index]="i">
+      <ion-card (click)='presentActionSheet(i)' *ngIf="address !== null && address !== undefined" style="margin:15px 0">
+          <ion-card-header>
+            <ion-card-subtitle>{{ address.address.substr(0,6) }}...{{ address.address.substr(-6) }}</ion-card-subtitle>
+            <ion-card-title style="font-size:28px; font-weight:bold;">{{ address.label }}</ion-card-title>
+            {{ address.notes }}
+          </ion-card-header>
+      </ion-card>
+    </div>
+  </div>
+  <ion-content *ngIf="showNewContact === true" class="unlockModal" style="text-align:left">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-icon style="margin: 0 10px" (click)="hideNewContact()" name="arrow-back"></ion-icon>
+          </ion-buttons>
+          <ion-title>{{modalAction}} {{ translations.contacts.contact }}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <div class="ion-padding">
+        <h2 style='font-size:14px'>{{ translations.contacts.address }}</h2>
+        <div style="position:relative">
+          <ion-input placeholder="{{ translations.send.insert_address }}" style="border-bottom:1px solid #aaa; margin-right:30px;" [(ngModel)]='newContactAddress'></ion-input>
+          <ion-icon name="camera" (click)="scanQRCode()" style="color: #a7a7a7; position:absolute; top:10px; right:0; z-index:99; float:right; font-size:20px;"></ion-icon>
+        </div>
+        <h2 style='font-size:14px'>{{ translations.contacts.contact_name }}</h2>
+        <ion-input placeholder="{{ translations.contacts.insert_name }}" style="border-bottom:1px solid #aaa" [(ngModel)]='newContactLabel'></ion-input>
+        <h2 style='font-size:14px'>{{ translations.contacts.notes }}</h2>
+        <ion-textarea placeholder="{{ translations.contacts.insert_notes }}" style="border-bottom:1px solid #aaa; height:20vh" [(ngModel)]='newContactNotes'></ion-textarea>
+        <br><br>
+        <div class="ion-text-center">
+          <button *ngIf="modalAction === 'Create'" class="buttonsBut ion-text-center" type="submit" (click)='saveContact()' style="margin:0 auto">{{ translations.contacts.save_contact }}</button>
+          <button *ngIf="modalAction === 'Edit'" class="buttonsBut ion-text-center" type="submit" (click)='editContact()' style="margin:0 auto">{{ translations.contacts.save_contact }}</button>
+        </div>
+      </div>
+    </ion-content>
+</ion-content>

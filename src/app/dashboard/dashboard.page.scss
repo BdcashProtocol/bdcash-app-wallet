@@ -1,0 +1,23 @@
+//@import 'https://code.highcharts.com/css/highcharts.css';
+.show{
+    display:block!important;
+    width:100%!important;
+    padding:0!important;
+    margin:0!important;
+}
+#container {
+	height: 400px;
+	max-width: 800px;
+	margin: 0 auto;
+}
+.highcharts-title {
+    fill: #434348;
+    font-weight: bold;
+    letter-spacing: 0.3em;
+    font-size: 14em;
+}
+
+.walletbala {
+    width: 375px;
+    height: 260px;
+  }

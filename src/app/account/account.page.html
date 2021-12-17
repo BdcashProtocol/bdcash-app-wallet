@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon style="margin: 0 10px" (click)="goBack()" name="arrow-back"></ion-icon>
+    </ion-buttons>
+    <ion-title>{{ translations.identities.title }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon name="add" (click)='addAccount()' style="padding-right:10px;"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div style="width:100%; display:block; height:30px; margin-top:15px"> 
+    <h2 style='font-size:14px; margin-top:0px'>
+      {{ translations.identities.hide_empty }}
+      <div style="float:right; margin-top:-10px;">
+        <ion-toggle [(ngModel)]='toggleNoBalance'></ion-toggle>
+      </div>
+    </h2>
+  </div>
+  <div class="ion-padding" style="text-align: center" *ngIf="accounts.length === 0">
+    {{ translations.identities.loading }}
+  </div>
+  <div *ngIf="toggleNoBalance === true">
+    <div *ngFor="let address of accounts; let i=index" [attr.data-index]="i">
+        <ion-card (click)='openDetails(address.index)' *ngIf="address.balance > 0" style="margin:15px 0">
+            <ion-card-header>
+              <ion-card-subtitle>{{ address.address.substr(0,6) }}...{{ address.address.substr(-6) }}</ion-card-subtitle>
+              <ion-card-title style="font-size:25px; font-weight:bold;">{{ address.balance }} BDCASH</ion-card-title>
+              <ion-icon name="arrow-forward" style="float:right; position:absolute; top:35px; right:25px;" size='large'></ion-icon>
+            </ion-card-header>
+        </ion-card>
+      </div>
+  </div>
+  <div *ngIf="toggleNoBalance === false">
+    <div *ngFor="let address of accounts; let i=index" [attr.data-index]="i">
+        <ion-card (click)='openDetails(address.index)' style="margin:15px 0">
+            <ion-card-header>
+              <ion-card-subtitle>{{ address.address.substr(0,6) }}...{{ address.address.substr(-6) }}</ion-card-subtitle>
+              <ion-card-title style="font-size:25px; font-weight:bold;">{{ address.balance }} BDCASH</ion-card-title>
+              <ion-icon name="arrow-forward" style="float:right; position:absolute; top:35px; right:25px" size='large'></ion-icon>
+            </ion-card-header>
+        </ion-card>
+      </div>
+  </div>
+
+</ion-content>

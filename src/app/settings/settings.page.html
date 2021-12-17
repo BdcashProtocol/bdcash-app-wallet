@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-icon style="margin: 0 10px" (click)="goBack()" name="arrow-back"></ion-icon>
+      <ion-title>{{ translations.settings.title }}</ion-title>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div style="text-align: center">
+    <br><img src="/assets/imgs/logo.png" class="scrypta_ce" width="25%"><br><br>
+    <div style="padding: 0 15%">{{ translations.settings.description }}</div><br>
+    <strong>v1.5.4</strong>
+    <br><br>
+    <a href="#" (click)="openLink('https://wiki.scryptachain.org/manent-scrypta-blockchain-wallet/manent-mobile-app')">Help</a><br>
+    <a href="#" (click)="openLink('https://github.com/scryptachain')">GitHub</a><br>
+    <a href="#" (click)="openLink('https://scrypta.foundation')">Foundation Website</a><br>
+    <a href="#" (click)="openLink('https://scryptachain.org')">ScryptaChain Website</a><br>
+    <a href="#" (click)="openLink('https://explorer.scryptachain.org')">Block Explorer</a><br>
+    <a href="#" (click)="openLink('https://sidechain.scryptachain.org')">Sidechain Explorer</a><br>
+    <a href="#" (click)="openLink('https://proof.scryptachain.org')">Data Explorer</a><br>
+    <a href="#" (click)="openLink('https://web.manent.app')">Manent Web</a><br>
+  </div>
+
+  <ion-item style="margin-top:10%">
+    <ion-label style="font-size:14px;color:#d43f51"> {{ translations.settings.language }}</ion-label>
+    <ion-select [(ngModel)]='language' value={{language}} (ngModelChange)='changeLanguage()'>
+      <ion-select-option value='it'>Italiano</ion-select-option>
+      <ion-select-option value='en'>English</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item style="margin-top:10px">
+    <ion-label style="font-size:14px;color:#d43f51"> {{ translations.settings.preferred_currency }}</ion-label>
+    <ion-select [(ngModel)]='currency' value={{currency}} (ngModelChange)='changeCurrency()'>
+      <ion-select-option value='usd'>USD</ion-select-option>
+      <ion-select-option value='eur'>EUR</ion-select-option>
+      <ion-select-option value='gbp'>GBP</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item style="margin-top:10px">
+    <ion-label style="font-size:14px;color:#d43f51"> {{ translations.settings.theme }}</ion-label>
+    <ion-select [(ngModel)]='theme' value={{theme}} (ngModelChange)='changeTheme()'>
+      <ion-select-option value='light'>Light</ion-select-option>
+      <ion-select-option value='dark'>Dark</ion-select-option>
+    </ion-select>
+  </ion-item>
+</ion-content>
