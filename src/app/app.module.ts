@@ -52,11 +52,6 @@ export class SocketOne extends Socket {
   ],
   providers: [
     SocketOne, 
-    SocketTwo,
-    SocketThree,
-    SocketFour,
-    SocketFive,
-    SocketSix,
     Globalization,
     LoadingController,
     Clipboard,
