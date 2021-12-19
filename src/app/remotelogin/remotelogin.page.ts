@@ -25,15 +25,10 @@ export class RemoteloginPage implements OnInit {
   unlockPwd: string;
   bdcash: any = {}
   global: any = {}
-  constructor(private router: Router, windowRef: WindowRefService, private socketone: SocketOne, private sockettwo: SocketTwo, private socketthree: SocketThree, private socketfour: SocketFour, private socketfive: SocketFive, private socketsix: SocketSix, private qrScanner: BarcodeScanner) {
+  constructor(private router: Router, windowRef: WindowRefService, private socketone: SocketOne, private qrScanner: BarcodeScanner) {
     const app = this
     app._window = windowRef.nativeWindow;
     this.socketone.connect()
-    this.sockettwo.connect()
-    this.socketthree.connect()
-    this.socketfour.connect()
-    this.socketfive.connect()
-    this.socketsix.connect()
     this.router.events.subscribe(async (val) => {
       app.isSending = false
       app.unlockPwd = ''
@@ -82,20 +77,10 @@ export class RemoteloginPage implements OnInit {
                 })
                 message = await app._window.BdcashCore.signMessage(response.prv, tosign)
                 app.socketone.emit('message', message);
-                app.sockettwo.emit('message', message);
-                app.socketthree.emit('message', message);
-                app.socketfour.emit('message', message);
-                app.socketfive.emit('message', message);
-                app.socketsix.emit('message', message);
               })
               app.interval = setInterval(function(){
                 app._window.BdcashCore.readKey(app.unlockPwd, app.address + ':' + app.encrypted).then(async function (response) {
                 app.socketone.emit('message', message);
-                app.sockettwo.emit('message', message);
-                app.socketthree.emit('message', message);
-                app.socketfour.emit('message', message);
-                app.socketfive.emit('message', message);
-                app.socketsix.emit('message', message);
               }, 2000)
             })
           }).catch(err => {
