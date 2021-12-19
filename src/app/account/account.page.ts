@@ -29,7 +29,7 @@ export class AccountPage implements OnInit {
   encrypted: string = ''
   selected: number = 0
   private _window: ICustomWindow;
-  idanode: string = 'https://nodesh01.bdcashprotocol.com'
+  nodesh: string = 'https://nodesh01.bdcashprotocol.com'
   address: string
   transactions = []
   constructor(private clipboard: Clipboard, private toast: ToastController, private modalCtrl: ModalController, public router:Router, windowRef: WindowRefService, private _location: Location, private iab: InAppBrowser) {
@@ -38,7 +38,7 @@ export class AccountPage implements OnInit {
 
     this.router.events.subscribe(async (val) => {
       this.accounts = []
-      app.idanode = await app._window.BDCashCore.connectNode()
+      app.nodesh = await app._window.BDCashCore.connectNode()
       this.parseWallet()
     })
    }
@@ -65,8 +65,8 @@ export class AccountPage implements OnInit {
       app.encrypted = payload[1]
       for (let i = 0; i < app.wallet.length; i++) {
         let payload = app.wallet[i].split(':')
-        let transactions = await axios.get(app.idanode + '/transactions/' + payload[0])
-        let balance = await axios.get(app.idanode + '/balance/' + payload[0])
+        let transactions = await axios.get(app.nodesh + '/transactions/' + payload[0])
+        let balance = await axios.get(app.nodesh + '/balance/' + payload[0])
         let address = {
           address: payload[0],
           balance: balance.data.balance.toFixed(4),

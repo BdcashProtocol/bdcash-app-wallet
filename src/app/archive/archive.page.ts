@@ -23,7 +23,7 @@ export class ArchivePage implements OnInit {
   nodes: string[] = [];
   wallet = []
   address: string = ''
-  idanode: string = 'https://idanodejs01.scryptachain.org'
+  nodesh: string = 'https://nodesh01.bdcashprotocol.com'
   selected: number = 0
   balance: string = '-'
   workingmessage: string = 'Uploading data, please wait and don\'t refresh the page'
@@ -69,7 +69,7 @@ export class ArchivePage implements OnInit {
     app.address = payload[0]
     app.encrypted = payload[1]
     setTimeout(async () => {
-      app.idanode = await app._window.ScryptaCore.connectNode()
+      app.nodesh = await app._window.BDCashCore.connectNode()
       app.readData()
     },50)
   }
@@ -77,7 +77,7 @@ export class ArchivePage implements OnInit {
   async readData() {
     const app = this
     app.readerror = ''
-    await axios.post(app.idanode + '/read', {
+    await axios.post(app.nodesh + '/read', {
       decrypt: false,
       address: app.address,
       history: false
@@ -107,11 +107,11 @@ export class ArchivePage implements OnInit {
   async retrieveInfo(hash) {
     const app = this
     return new Promise(async res => {
-      await axios.get(app.idanode + '/ipfs/type/' + hash).then(async function (response) {
+      await axios.get(app.nodesh + '/ipfs/type/' + hash).then(async function (response) {
         if(response.data.data !== undefined){
           app.hashes[hash].mimetype = response.data.data.type
           app.hashes[hash].mimedetail = response.data.data.ext
-          app.hashes[hash].data = app.idanode + '/ipfs/' + hash
+          app.hashes[hash].data = app.nodesh + '/ipfs/' + hash
           res(true)
         }else{
           res(false)
@@ -181,17 +181,17 @@ export class ArchivePage implements OnInit {
           if(detail.data.fileObject.encrypt === true){
             const form_data = new FormData()
             app.workingmessage = 'Crypting file...'
-            var crypted = await app._window.ScryptaCore.cryptFile(detail.data.fileObject.fileBuffer,detail.data.fileObject.encryptPwd)
+            var crypted = await app._window.BDCashCore.cryptFile(detail.data.fileObject.fileBuffer,detail.data.fileObject.encryptPwd)
             form_data.append("buffer", crypted)
             app.workingmessage = 'Uploading file to IPFS...'
-            var ipfs = await axios.post(app.idanode + '/ipfs/add', form_data, config)
+            var ipfs = await axios.post(app.nodesh + '/ipfs/add', form_data, config)
             var hash = ipfs.data.data[0].hash
             if(hash !== undefined){
               app.workingmessage = 'Verifying IPFS file...'
-              let buffer = await axios.get(app.idanode + '/ipfs/buffer/' + hash)
+              let buffer = await axios.get(app.nodesh + '/ipfs/buffer/' + hash)
               let data = buffer.data.data[0].content.data
               app.workingmessage = 'Verifying crypted file...'
-              let decrypted = await app._window.ScryptaCore.decryptFile(data, detail.data.fileObject.encryptPwd)
+              let decrypted = await app._window.BDCashCore.decryptFile(data, detail.data.fileObject.encryptPwd)
               if(decrypted !== false){
                 message = 'ipfs:' + hash
                 protocol = 'E://'
@@ -206,7 +206,7 @@ export class ArchivePage implements OnInit {
           }else{
             const form_data = new FormData()
             form_data.append("file", detail.data.fileObject.fileBuffer)
-            var ipfs = await axios.post(app.idanode + '/ipfs/add', form_data, config)
+            var ipfs = await axios.post(app.nodesh + '/ipfs/add', form_data, config)
             var hash = ipfs.data.data.hash
             if(hash !== undefined){
               message = 'ipfs:' + hash
@@ -230,9 +230,9 @@ export class ArchivePage implements OnInit {
         }
         if(detail.data.fileObject.fileBuffer === undefined && detail.data.fileObject.encrypt === true){
           app.workingmessage = 'Crypting data...'
-          var crypted = await app._window.ScryptaCore.cryptData(message, detail.data.fileObject.encryptPwd)
+          var crypted = await app._window.BDCashCore.cryptData(message, detail.data.fileObject.encryptPwd)
           app.workingmessage = 'Verifying data...'
-          var decrypted = await app._window.ScryptaCore.decryptData(crypted, detail.data.fileObject.encryptPwd)
+          var decrypted = await app._window.BDCashCore.decryptData(crypted, detail.data.fileObject.encryptPwd)
           if(decrypted === message){
             message = crypted
             protocol = 'E://'
@@ -243,7 +243,7 @@ export class ArchivePage implements OnInit {
         }
         if(errors === false){
           app.workingmessage = 'Uploading data...'
-          app._window.ScryptaCore.write(password, message, '', refID , protocol, app.address + ':' + app.encrypted).then(res => {
+          app._window.BDCashCore.write(password, message, '', refID , protocol, app.address + ':' + app.encrypted).then(res => {
             console.log(res)
             if(res.uuid !== undefined){
               alert('Data written correctly into the blockchain, wait at least 2 minutes and refresh the page!')

@@ -28,7 +28,7 @@ export class AccountDetailPage implements OnInit {
   encrypted: any
   showChange: boolean = false
   balance: any = 0
-  idanode: string = 'https://nodesh01.bdcashprotocol.com'
+  nodesh: string = 'https://nodesh01.bdcashprotocol.com'
   transactions: any = []
   password: any = ''
   passwordChange: any = ''
@@ -51,11 +51,11 @@ export class AccountDetailPage implements OnInit {
     }
     app.translations = this.locales.default[app.language]
     setTimeout(async () => {
-      app.idanode = await app._window.ScryptaCore.connectNode()
-      axios.get(app.idanode + '/transactions/' + app.address).then(response => {
+      app.nodesh = await app._window.BDCashCore.connectNode()
+      axios.get(app.nodesh + '/transactions/' + app.address).then(response => {
         app.transactions = response.data.data
       })
-      axios.get(app.idanode + '/balance/' + app.address).then(response => {
+      axios.get(app.nodesh + '/balance/' + app.address).then(response => {
         app.balance = response.data.balance.toFixed(4)
       })
     },50)
@@ -78,14 +78,14 @@ export class AccountDetailPage implements OnInit {
   changePassword() {
     const app = this
     if (app.password !== '') {
-      app._window.ScryptaCore.readKey(app.password, app.address + ':' + app.encrypted).then(function (response) {
+      app._window.BDCashCore.readKey(app.password, app.address + ':' + app.encrypted).then(function (response) {
         if (response !== false) {
           if(app.passwordChange === app.passwordChangeRepeat){
             var wallet = {
                 prv: response.prv,
                 key: response.key
             }
-            app._window.ScryptaCore.buildWallet(app.passwordChange, app.address, wallet, false).then(function(response){
+            app._window.BDCashCore.buildWallet(app.passwordChange, app.address, wallet, false).then(function(response){
               app.wallet[app.index] = response
               localStorage.setItem('wallet',JSON.stringify(app.wallet))
               app.showChange = false
@@ -172,7 +172,7 @@ export class AccountDetailPage implements OnInit {
   unlockWallet() {
     const app = this
     if (app.password !== '') {
-      app._window.ScryptaCore.readKey(app.password, app.address + ':' + app.encrypted).then(function (response) {
+      app._window.BDCashCore.readKey(app.password, app.address + ':' + app.encrypted).then(function (response) {
         if (response !== false) {
           app.lock()
           app.private_key = response.prv
@@ -188,11 +188,11 @@ export class AccountDetailPage implements OnInit {
 
   openInExplorer() {
     const app = this
-    this.iab.create('https://explorer.scryptachain.org/address/' + app.address, '_system', 'location=yes'); return false;
+    this.iab.create('https://insight.bdcashprotocol.com/address/' + app.address, '_system', 'location=yes'); return false;
   }
 
   openDetails(response) {
-    this.iab.create('https://explorer.scryptachain.org/transaction/' + response.txid, '_system', 'location=yes')
+    this.iab.create('https://insight.bdcashprotocol.com/tx/' + response.txid, '_system', 'location=yes')
   }
 
 }

@@ -27,7 +27,7 @@ export class DashboardPage implements OnInit {
   language: any = 'en'
   translations: any = {}
   locales: any = locales
-  idanode: string = 'https://nodesh01.bdcashprotocol.com'
+  nodesh: string = 'https://nodesh01.bdcashprotocol.com'
   valueBTC: string = '0';
   valore: number;
   options: any;
