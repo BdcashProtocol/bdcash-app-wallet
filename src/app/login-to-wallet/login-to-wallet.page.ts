@@ -122,15 +122,15 @@ export class LoginToWalletPage implements OnInit {
     const app = this
     if(app.privKeyRestore !== '' && app.passwordRestore !== ''){
       let privkey = app.privKeyRestore
-      let pubkey = await app._window.ScryptaCore.getPublicKey(privkey)
-      let address = await app._window.ScryptaCore.getAddressFromPubKey(pubkey)
+      let pubkey = await app._window.BDCashCore.getPublicKey(privkey)
+      let address = await app._window.BDCashCore.getAddressFromPubKey(pubkey)
 
       var wallet = {
           prv: privkey,
           key: pubkey
       }
 
-      var walletstore = await app._window.ScryptaCore.buildWallet(app.passwordRestore, address, wallet, false)
+      var walletstore = await app._window.BDCashCore.buildWallet(app.passwordRestore, address, wallet, false)
       app.addAddress(walletstore)
       app.passwordRestore = ''
       app.privKeyRestore = ''

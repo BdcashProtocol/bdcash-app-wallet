@@ -3,7 +3,7 @@ import { Router } from '@angular/router'
 import { WindowRefService, ICustomWindow } from '../windowservice';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx'
 var locales =  require('../locales.js')
-import { SocketOne, SocketTwo, SocketThree, SocketFour, SocketFive, SocketSix } from '../app.module';
+import { SocketOne } from '../app.module';
 
 @Component({
   selector: 'app-remotelogin',

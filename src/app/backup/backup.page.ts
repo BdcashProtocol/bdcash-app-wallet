@@ -113,7 +113,7 @@ export class BackupPage implements OnInit {
   unlockWallet() {
     const app = this
     if (app.password !== '') {
-      app._window.ScryptaCore.readKey(app.password, app.address + ':' + app.encrypted).then(function (response) {
+      app._window.BDCashCore.readKey(app.password, app.address + ':' + app.encrypted).then(function (response) {
         if (response !== false) {
           app.lock()
           app.private_key = response.prv

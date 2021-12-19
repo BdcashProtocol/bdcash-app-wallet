@@ -19,7 +19,7 @@ export class ArchivedetailPage implements OnInit {
   risposta
   private _window: ICustomWindow;
   wallet: any
-  idanode: any = 'https://nodesh01.bdcashprotocol.com'
+  nodesh: any = 'https://nodesh01.bdcashprotocol.com'
   address: any = ''
   encrypted: any
   isDecrypting: boolean = false
@@ -43,7 +43,7 @@ export class ArchivedetailPage implements OnInit {
     app.address = payload[0]
     app.encrypted = payload[1]
     setTimeout(async () => {
-      app.idanode = await app._window.ScryptaCore.connectNode()
+      app.nodesh = await app._window.BDCashCore.connectNode()
     },50)
   }
   
@@ -77,7 +77,7 @@ export class ArchivedetailPage implements OnInit {
     const app = this
     if(app.isDecrypting === false){
       app.isDecrypting = true
-      axios.get(app.idanode +'/ipfs/buffer/' + app.risposta.data).then(ipfs => {
+      axios.get(app.nodesh +'/ipfs/buffer/' + app.risposta.data).then(ipfs => {
         let data = ipfs.data.data[0].content.data
         app._window.BDCashCore.decryptFile(data, app.decryptPwd).then(decrypted => {
           app.isDecrypting = false

@@ -29,7 +29,7 @@ export class ReceivePage implements OnInit {
   focus: any = 'lyra'
   encrypted: string = ''
   wallet: string = ''
-  idanode: string = 'https://idanodejs01.scryptachain.org'
+  nodesh: string = 'https://nodesh01.bdcashprotocol.com'
   selected: number = 0
   isSending: boolean = false
   guestBalance: any = ''
@@ -48,7 +48,7 @@ export class ReceivePage implements OnInit {
     const app = this
     app._window = windowRef.nativeWindow;
     setTimeout(async () => {
-      app.idanode = await app._window.ScryptaCore.connectNode()
+      app.nodesh = await app._window.BDCashCore.connectNode()
     },50)
     app.platform.ready().then(async () => {
       if(this.platform.is('ios') === true ){
@@ -83,7 +83,7 @@ export class ReceivePage implements OnInit {
     app.encrypted = payload[1]
 
     if(app.chain !== 'main'){
-      let sidechainBalance = await axios.post(app.idanode + '/sidechain/balance', { dapp_address: app.address, sidechain_address: app.chain })
+      let sidechainBalance = await axios.post(app.nodesh + '/sidechain/balance', { dapp_address: app.address, sidechain_address: app.chain })
       app.ticker = sidechainBalance.data.symbol
     }
 
@@ -118,7 +118,7 @@ export class ReceivePage implements OnInit {
           app.guestWallet = address
           let split = app.guestWallet.split(':')
           if(app.chain !== 'main'){
-            let sidechainBalance = await axios.post(app.idanode + '/sidechain/balance', { dapp_address: split[0], sidechain_address: app.chain })
+            let sidechainBalance = await axios.post(app.nodesh + '/sidechain/balance', { dapp_address: split[0], sidechain_address: app.chain })
             app.guestBalance = sidechainBalance.data.balance
             if(app.guestBalance > app.amountSidechain){
               app.showUnlock = true
@@ -154,7 +154,7 @@ export class ReceivePage implements OnInit {
         app.guestWallet = address
         let split = app.guestWallet.split(':')
         if(app.chain !== 'main'){
-          let sidechainBalance = await axios.post(app.idanode + '/sidechain/balance', { dapp_address: split[0], sidechain_address: app.chain })
+          let sidechainBalance = await axios.post(app.nodesh + '/sidechain/balance', { dapp_address: split[0], sidechain_address: app.chain })
           app.guestBalance = sidechainBalance.data.balance
           if(app.guestBalance > app.amountSidechain){
             app.showUnlock = true
@@ -177,13 +177,13 @@ export class ReceivePage implements OnInit {
   unlockWallet() {
     const app = this
     if (app.password !== '') {
-      app._window.ScryptaCore.readKey(app.password, app.guestWallet).then(async function (response) {
+      app._window.BDCashCore.readKey(app.password, app.guestWallet).then(async function (response) {
         if (response !== false) {
           app.isSending = true
           let guestSplit = app.guestWallet.split(':')
           if(app.chain === 'main'){
             app.amountLyra = parseFloat(app.amountLyra.replace(',','.').replace('0',''))
-            await app._window.ScryptaCore.send(app.password, app.address, app.amountLyra, '', app.guestWallet).then((result) => {
+            await app._window.BDCashCore.send(app.password, app.address, app.amountLyra, '', app.guestWallet).then((result) => {
               app.isSending = false
               if(result !== false && result !== undefined && result !== null){
                 alert(app.translations.send.sent_successful)
@@ -197,7 +197,7 @@ export class ReceivePage implements OnInit {
               app.guestWallet = ''
             })
           }else{
-            let responseSend = await axios.post(app.idanode + '/sidechain/send', 
+            let responseSend = await axios.post(app.nodesh + '/sidechain/send', 
               { 
                 from: guestSplit[0], 
                 private_key: response.prv,
